@@ -1,0 +1,40 @@
+void f(int ind,long& num,string s,bool& neg,bool& pos){
+        //base cases
+        if(num>INT_MAX){   
+            if(neg){
+                num=INT_MIN;
+                return;
+            }else{
+                num=INT_MAX;
+                return;
+            }
+        }
+        if(ind==s.size()) return;
+        if(s[ind]!=' ' && s[ind]!='-' && s[ind]!='+' && !(s[ind]>='0' && s[ind]<='9')) return;  //if s[ind] is just random alphabet then ignore
+        if((s[ind]==' ' || s[ind]=='-' || s[ind]=='+') && (num>=0 || neg || pos)) return;       //if there are 2 (+ or -) then return if there is a (- or +) after the digits for eg str="00-1" so there is a - after 0 so num=0 and then - encountered so return from there
+        if(neg && pos) return;   //if pos and neg occurs on the same time
+
+        //Rec cases
+        if(s[ind]=='-' && num<0) neg=true;
+        if(s[ind]=='+' && num<0) pos=true;
+        
+        else if(s[ind]>='0' && s[ind]<='9'){
+            if(num<0) num=s[ind]-'0';
+            else num=num*10+(s[ind]-'0');
+        }
+        f(ind+1,num,s,neg,pos);
+        
+    }
+    int myAtoi(string s) {
+       bool neg=false;
+       bool pos=false;
+       long num=-1;
+       int ind=0;
+
+       f(ind,num,s,neg,pos);
+
+       if(num==-1) return 0;
+       if(neg) return -num;
+       else return num;
+
+    }
